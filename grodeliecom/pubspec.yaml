@@ -49,6 +49,27 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
+  assets:
+    - assets/image/
+  fonts:
+    - family: OpenSans
+      fonts:
+        - asset: assets/fonts/OpenSansLight.ttf
+    - family: SOpenSans
+      fonts:
+        - asset: assets/fonts/OpenSansSemiBold.ttf
+    - family: ROpenSans
+      fonts:
+        - asset: assets/fonts/OpenSansRegular.ttf
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/PoppinsLight.ttf
+    - family: SPoppins
+      fonts:
+        - asset: assets/fonts/PoppinsSemibold.ttf
+    - family: SPoppins
+      fonts:
+        - asset: assets/fonts/PoppinsRegular.ttf
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

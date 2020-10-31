@@ -7,9 +7,10 @@ class Product {
   String image;
   String dis;
   String des;
+  String weight;
   //String href;
 
-  Product({this.title,this.price,this.qty,this.image,this.id,this.des,this.dis});
+  Product({this.title,this.price,this.qty,this.image,this.id,this.des,this.dis, this.weight});
 
   Product.fromJSON(Map<String, dynamic> jsonMap) {
     id = jsonMap['id'].toString()??'';
@@ -19,21 +20,23 @@ class Product {
     image = jsonMap['image'].toString();
     dis = jsonMap['dis'].toString()??'';
     des = jsonMap['des'].toString()??'';
-  //  href = jsonMap['href']['link'].toString()??'';
+    weight = jsonMap['wt'].toString()??'';
+    //  href = jsonMap['href']['link'].toString()??'';
   }
-  static Map<String, dynamic> toMap(Product music) => {
-    'id': music.id,
-    'title': music.title,
-    'price': music.price,
-    'qty': music.qty,
-    'image': music.image,
-    'dis': music.dis,
-    'des': music.des,
+  static Map<String, dynamic> toMap(Product item) => {
+    'id': item.id,
+    'title': item.title,
+    'price': item.price,
+    'qty': item.qty,
+    'image': item.image,
+    'dis': item.dis,
+    'des': item.des,
+    'wt': item.weight,
   };
 
-  static String encodeProducts(List<Product> musics) => json.encode(
-    musics
-        .map<Map<String, dynamic>>((music) => Product.toMap(music))
+  static String encodeProducts(List<Product> items) => json.encode(
+    items
+        .map<Map<String, dynamic>>((item) => Product.toMap(item))
         .toList(),
   );
 

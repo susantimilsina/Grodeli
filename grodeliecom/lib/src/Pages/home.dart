@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:grodeliecom/src/model/banner.dart';
-import 'package:grodeliecom/src/widget/homewidget/CardsCarouselWidget.dart';
 import 'package:grodeliecom/src/widget/homewidget/ListofHorizontalProduct.dart';
+import 'package:grodeliecom/src/widget/heading.dart';
+import 'package:grodeliecom/src/widget/homewidget/CardsCarouselWidget.dart';
 import 'package:grodeliecom/src/widget/homewidget/customappbar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../constant.dart';
@@ -142,12 +143,12 @@ class _Home_ScreenState extends State<Home_Screen> {
                   SizedBox(
                     height: MyApp.heightSpaceSize,
                   ),
-                  commonRowForNameAndViewAll("Top Products", 1),
+                  Heading("Top Products", 1, true),
                   HorizontalProducts(),
                   SizedBox(
                     height: MyApp.heightSpaceSize,
                   ),
-                  commonRowForNameAndViewAll("Trending", 2),
+                  Heading("Trending", 2, true),
                   HorizontalProducts(),
                 ],
               ),
@@ -221,52 +222,4 @@ class _Home_ScreenState extends State<Home_Screen> {
     }
   }
 
-  commonRowForNameAndViewAll(
-    String title,
-    int whichmethod,
-  ) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(5),
-            child: Text(
-              title,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: MyApp.titleTextSize,
-                letterSpacing: 0.5,
-                fontFamily: Constants.SPOPPINS,
-                //    fontWeight: FontWeight.bold
-              ),
-            ),
-          ),
-        ),
-        GestureDetector(
-          onTap: () {},
-          child: Padding(
-              padding: const EdgeInsets.all(10),
-              child: Row(
-                children: <Widget>[
-                  Text(
-                    'View All',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: MyApp.subtitleTextSize,
-                      letterSpacing: 0.5,
-                      fontFamily: Constants.SPOPPINS,
-                      //    fontWeight: FontWeight.bold
-                    ),
-                  ),
-                  Icon(
-                    Icons.arrow_forward_ios,
-                    size: MyApp.subtitleTextSize,
-                  )
-                ],
-              )),
-        )
-      ],
-    );
-  }
 }

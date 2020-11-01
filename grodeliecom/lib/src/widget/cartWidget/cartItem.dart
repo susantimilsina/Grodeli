@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:grodeliecom/src/Pages/wishList.dart';
 import 'package:grodeliecom/src/model/CartItem.dart';
 import '../../../constant.dart';
 import '../../../main.dart';
 import '../amt_adjust.dart';
 class CartItem extends StatefulWidget {
   final CartItemModel cartItemModel;
-
-  CartItem(this.cartItemModel);
+  final WishListState parent;
+  CartItem({this.cartItemModel,this.parent});
   @override
-  _CartItemState createState() => _CartItemState();
+  CartItemState createState() => CartItemState();
 }
 
-class _CartItemState extends State<CartItem> {
+class CartItemState extends State<CartItem> {
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
@@ -82,7 +83,6 @@ class _CartItemState extends State<CartItem> {
                               GestureDetector(
                                 onTap: () {
                                   confirmRemove(context);
-                                  setState(() {});
                                 },
                                 child: Container(
                                   height: 80.ssp,
@@ -105,7 +105,7 @@ class _CartItemState extends State<CartItem> {
                             style: TextStyle(
                                 fontSize: MyApp.subtitleTextSize, fontFamily: Constants.OPEN_SANS),
                           ),
-                          AddSub(product: widget.cartItemModel.product)
+                          AddSub(product: widget.cartItemModel.product,parent: this,)
                         ],
                       ),
                     ),
@@ -127,16 +127,18 @@ class _CartItemState extends State<CartItem> {
       actions: <Widget>[
         RaisedButton(
             child: Text("Yes"),
-            color: Colors.red,
+            color: Colors.white,
             onPressed: () async {
-              setState(() {
+              widget.parent.setState(() {
+                widget.parent.carts.remove(widget.cartItemModel);
+                Navigator.pop(context);
               });
 //              Navigator.of(context)
 //                  .pushNamedAndRemoveUntil('/Signin', (route) => false);
             }),
         RaisedButton(
             child: Text("No"),
-            color: Colors.yellow,
+            color: appcolor,
             onPressed: () {
               Navigator.pop(context);
             })

@@ -3,17 +3,23 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:grodeliecom/src/model/product.dart';
 
 import '../../main.dart';
+import 'cartWidget/cartItem.dart';
 
 class AddSub extends StatefulWidget {
   Product product;
-
-  AddSub({@required this.product,});
+  CartItemState parent;
+  AddSub({
+    @required this.product,
+    this.parent
+  });
 
   @override
   _AddSubState createState() => _AddSubState();
 }
 
 class _AddSubState extends State<AddSub> {
+  int count = 1;
+
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
@@ -23,7 +29,7 @@ class _AddSubState extends State<AddSub> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              "Rs ",  // widget.product.price yesma aauxa price
+              "Rs ${double.parse(widget.parent.widget.cartItemModel.product.price)*count}", // widget.product.price yesma aauxa price
               style: TextStyle(
                   fontSize: MyApp.subtitleTextSize,
                   //fontFamily: Constants.POPPINS,
@@ -34,7 +40,16 @@ class _AddSubState extends State<AddSub> {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
                 GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    setState(() {
+                      if (count != 1) {
+                        count--;
+                      }else{
+//                        confirm
+                        widget.parent.confirmRemove(context);
+                      }
+                    });
+                  },
                   child: Container(
                     height: 60.ssp,
                     width: 60.ssp,
@@ -56,7 +71,7 @@ class _AddSubState extends State<AddSub> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 1),
                   child: Text(
-                    "1",
+                    count.toString(),
                     style: TextStyle(fontSize: MyApp.titleTextSize),
                   ),
                 ),
@@ -65,10 +80,9 @@ class _AddSubState extends State<AddSub> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    // setState(() {
-                    //   count++;
-                    //   getAddNDeldata();
-                    // });
+                    setState(() {
+                      count++;
+                    });
                   },
                   child: Container(
                     height: 60.ssp,

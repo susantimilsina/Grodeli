@@ -4,20 +4,23 @@ import 'package:grodeliecom/src/model/CartItem.dart';
 import 'package:grodeliecom/src/model/product.dart';
 import 'package:grodeliecom/src/widget/cartWidget/cartItem.dart';
 import 'package:grodeliecom/src/widget/heading.dart';
+import '../../NavigateScreen.dart';
 import '../../constant.dart';
 import '../../main.dart';
+import 'completeorder.dart';
 
 
 class WishList extends StatefulWidget {
   @override
-  _WishListState createState() => _WishListState();
+  WishListState createState() => WishListState();
 }
 
-class _WishListState extends State<WishList> {
+class WishListState extends State<WishList> {
   List<String> data = ["Manage Cart", "Select Address", "Select Payment"];
   List<String> address = ["Lalitpur", "Bhaktapur", "Kathmandu"];
   List<CartItemModel> carts = [];
   paymentMethod _character = paymentMethod.cashondelivery;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -42,13 +45,11 @@ class _WishListState extends State<WishList> {
     ScreenUtil.init(context);
     return Scaffold(
       appBar: getappbar("Cart"),
-      body:
-      Container(
+      body: Container(
         padding: EdgeInsets.symmetric(horizontal: 10),
         height: MediaQuery.of(context).size.height,
         color: Colors.white,
-        child:
-        SingleChildScrollView(
+        child: SingleChildScrollView(
           child: Column(
             children: [
               Container(
@@ -126,17 +127,19 @@ class _WishListState extends State<WishList> {
                     ),
                     Container(
                       margin: EdgeInsets.all(10),
-                      height: 100.ssp,
+                      height: 75.ssp,
                       child: RaisedButton(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(25.ssp),
-                            side: BorderSide(color: MyApp.lightBlueColor)),
-                        onPressed: () {},
-                        padding: EdgeInsets.all(20.ssp),
+                            side: BorderSide(color: MyApp.statusAwayColor)),
+                        onPressed: () {
+                          applyCoupon(context);
+                        },
+                        padding: EdgeInsets.all(10.ssp),
                         color: Colors.white,
-                        textColor: MyApp.lightBlueColor,
+                        textColor: MyApp.statusAwayColor,
                         child: Text("Apply Coupon Code",
-                            style: TextStyle(fontSize: 40.ssp)),
+                            style: TextStyle(fontSize: 35.ssp)),
                       ),
                     ),
                   ],
@@ -148,7 +151,10 @@ class _WishListState extends State<WishList> {
                 child: ListView.builder(
                     itemCount: carts.length,
                     itemBuilder: (context, index) {
-                      return CartItem(carts[index]);
+                      return CartItem(
+                        cartItemModel: carts[index],
+                        parent: this,
+                      );
                     }),
               ),
               Container(
@@ -207,20 +213,20 @@ class _WishListState extends State<WishList> {
               ),
               Heading("DELIVERY ADDRESS", 1, false),
               Container(
+                margin: EdgeInsets.all(10),
+                height: 100.ssp,
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: RaisedButton(
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5.0),
-                    ),
+                        borderRadius: BorderRadius.circular(25.ssp),
+                        side: BorderSide(color: MyApp.statusAwayColor)),
                     onPressed: () {},
-                    color: appcolor,
-                    textColor: Colors.white,
-                    child: Text(
-                      "ADD NEW ADDRESS",
-                      style: TextStyle(
-                        fontSize: 14,),
-                    ),
+                    padding: EdgeInsets.all(20.ssp),
+                    color: Colors.white,
+                    textColor: MyApp.statusAwayColor,
+                    child: Text("ADD NEW ADDRESS",
+                        style: TextStyle(fontSize: 40.ssp)),
                   ),
                 ),
               ),
@@ -234,9 +240,9 @@ class _WishListState extends State<WishList> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          PaymentRadio('Cash On Delivery', paymentMethod.cashondelivery),
                           PaymentRadio(
-                              'Khalti', paymentMethod.khalti),
+                              'Cash On Delivery', paymentMethod.cashondelivery),
+                          PaymentRadio('Khalti', paymentMethod.khalti),
                           PaymentRadio('Esewa', paymentMethod.esewa),
                         ],
                       ),
@@ -244,7 +250,7 @@ class _WishListState extends State<WishList> {
               ),
               InkWell(
                 onTap: () {
-
+                  changeScreen(context,CompleteOrder());
                 },
                 child: Container(
                   margin: EdgeInsets.all(30.ssp),
@@ -252,7 +258,7 @@ class _WishListState extends State<WishList> {
                   width: width,
                   decoration: BoxDecoration(
                     color: Color(0xff097eca),
-                    borderRadius: BorderRadius.all(Radius.circular(25)),
+                    borderRadius: BorderRadius.all(Radius.circular(30.ssp)),
                   ),
                   child: Center(
                       child: Column(
@@ -260,11 +266,21 @@ class _WishListState extends State<WishList> {
                         children: [
                           Text(
                             "CONFIRM ORDER",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: Constants.RPOPPINS,
+                                letterSpacing: 1,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 40.ssp),
                           ),
                           Text(
                             "Rs. 1054",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: Constants.RPOPPINS,
+                                letterSpacing: 1,
+                                fontWeight: FontWeight.w900,
+                                fontSize: 40.ssp),
                           ),
                         ],
                       )),
@@ -276,14 +292,14 @@ class _WishListState extends State<WishList> {
       ),
     );
   }
+
   Widget PaymentRadio(String title, paymentMethod method) {
     return Container(
       height: 70.ssp,
       child: RadioListTile<paymentMethod>(
-        title: Text(title,
-          style: TextStyle(
-              fontSize: 40.ssp
-          ),
+        title: Text(
+          title,
+          style: TextStyle(fontSize: 40.ssp),
         ),
         activeColor: appcolor,
         value: method,
@@ -302,6 +318,159 @@ class _WishListState extends State<WishList> {
       ),
     );
   }
+}
+
+applyCoupon(BuildContext context) {
+  return showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return StatefulBuilder(
+          builder: (context, setStated) {
+            return Center(
+              child: Container(
+                width: double.infinity,
+                child: SingleChildScrollView(
+                  child: AlertDialog(
+                    content: Column(
+                      children: [
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Padding(
+                            padding: EdgeInsets.all(15.ssp),
+                            child: Text(
+                              "Coupon Code",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: MyApp.titleTextSize,
+                                letterSpacing: 0.5,
+                                fontWeight: FontWeight.w900,
+                                fontFamily: Constants.SPOPPINS,
+                                //    fontWeight: FontWeight.bold
+                              ),
+                            ),
+                          ),
+                        ),
+                        Divider(
+                          height: 10.ssp,
+                          color: Colors.grey,
+                          thickness: 1,
+                        ),
+                        SizedBox(
+                          height: MyApp.heightSpaceSize,
+                        ),
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Padding(
+                            padding: EdgeInsets.all(15.ssp),
+                            child: Text(
+                              "Enter Coupon Code",
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: MyApp.subtitleTextSize,
+                                fontFamily: Constants.POPPINS,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Container(
+                          padding: EdgeInsets.all(15.ssp),
+                          height: 125.ssp,
+                          child: Row(
+                            textDirection: TextDirection.ltr,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                    enabledBorder: OutlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: Colors.grey, width: 2.0),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                height: 100.ssp,
+                                child: RaisedButton(
+                                  shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                          color: MyApp.statusAwayColor)),
+                                  onPressed: () {},
+                                  padding: EdgeInsets.all(10.ssp),
+                                  color: MyApp.statusAwayColor,
+                                  textColor: Colors.white,
+                                  child: Text("APPLY",
+                                      style: TextStyle(fontSize: 40.ssp)),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: 20.ssp,
+                        ),
+                        Divider(
+                          height: 10.ssp,
+                          color: Colors.grey[400],
+                          thickness: 0.5,
+                        ),
+                        SizedBox(
+                          height: MyApp.heightSpaceSize,
+                        ),
+                        Container(
+                          height: MediaQuery.of(context).size.height/3,
+                          child: ListView.separated(
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  child: Card(
+                                    elevation: 0,
+                                    child: ListTile(
+                                      title: Text(
+                                        "2020 DEC",
+                                        style: TextStyle(
+                                            fontSize: 35.ssp,
+                                            fontFamily: Constants.SPOPPINS),
+                                      ),
+                                      subtitle: Text(
+                                        "GET 10% off on any order",
+                                        style: TextStyle(
+                                            fontSize: 35.ssp,
+                                            fontFamily: Constants.SPOPPINS),
+                                      ),
+                                      trailing: RaisedButton(
+                                        shape: RoundedRectangleBorder(
+                                            side: BorderSide(
+                                                color: MyApp.statusAwayColor)),
+                                        onPressed: () {},
+                                        padding: EdgeInsets.all(20.ssp),
+                                        color: MyApp.statusAwayColor,
+                                        textColor: Colors.white,
+                                        child: Text("APPLY",
+                                            style: TextStyle(fontSize: 40.ssp)),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                              separatorBuilder: (context, index) {
+                                return Divider(
+                                  height: 10.ssp,
+                                  color: Colors.grey[400],
+                                  thickness: 0.5,
+                                );
+                              },
+                              itemCount: 5),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      });
 }
 
 enum paymentMethod { cashondelivery, khalti, esewa }

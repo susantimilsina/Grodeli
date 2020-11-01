@@ -17,7 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
     loadData();
   }
   void loadData() {
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 1), () {
     changeScreenReplacement(context,  Home_Screen());
     });
   }
@@ -32,14 +32,14 @@ class _SplashScreenState extends State<SplashScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Image.asset(
-                'assets/image/shamslogo.png',
-                width: 150,
-                fit: BoxFit.cover,
-              ),
+              // Image.asset(
+              //   'assets/image/shamslogo.png',
+              //   width: 150,
+              //   fit: BoxFit.cover,
+              // ),
               SizedBox(height: 50), CircularProgressIndicator(
                 valueColor: AlwaysStoppedAnimation<Color>(
-                    Theme.of(context).hintColor),
+                    Colors.white),
               )
             ],
           ),

@@ -74,7 +74,7 @@ class CartItemState extends State<CartItem> {
                                         softWrap: true,
                                         style: TextStyle(
                                             fontFamily: Constants.SOPEN_SANS,
-                                            fontSize: MyApp.subtitleTextSize),
+                                            fontSize: 47.ssp),
                                       ),
                                     ),
                                   ],
@@ -95,6 +95,7 @@ class CartItemState extends State<CartItem> {
                                   child: Icon(
                                     Icons.delete_forever,
                                     color: Colors.white,
+                                    size: 60.ssp,
                                   ),
                                 ),
                               )
@@ -103,7 +104,7 @@ class CartItemState extends State<CartItem> {
                           Text(
                             "Rs " + widget.cartItemModel.product.price.toString() + " /" + widget.cartItemModel.product.weight.toString(),
                             style: TextStyle(
-                                fontSize: MyApp.subtitleTextSize, fontFamily: Constants.OPEN_SANS),
+                                fontSize: 40.ssp, fontFamily: Constants.OPEN_SANS),
                           ),
                           AddSub(product: widget.cartItemModel.product,parent: this,)
                         ],

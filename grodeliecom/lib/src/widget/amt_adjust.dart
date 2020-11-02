@@ -18,8 +18,6 @@ class AddSub extends StatefulWidget {
 }
 
 class _AddSubState extends State<AddSub> {
-  int count = 1;
-
   @override
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
@@ -29,9 +27,9 @@ class _AddSubState extends State<AddSub> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Text(
-              "Rs ${double.parse(widget.parent.widget.cartItemModel.product.price)*count}", // widget.product.price yesma aauxa price
+              "Rs ${double.parse(widget.parent.widget.cartItemModel.product.price)*(widget.parent.widget.cartItemModel.quantity)}", // widget.product.price yesma aauxa price
               style: TextStyle(
-                  fontSize: MyApp.subtitleTextSize,
+                  fontSize: 40.ssp,
                   //fontFamily: Constants.POPPINS,
                   color: Colors.green),
             ),
@@ -41,9 +39,10 @@ class _AddSubState extends State<AddSub> {
               children: <Widget>[
                 GestureDetector(
                   onTap: () {
-                    setState(() {
-                      if (count != 1) {
-                        count--;
+
+                    widget.parent.widget.parent.setState(() {
+                      if (widget.parent.widget.cartItemModel.quantity != 1) {
+                        widget.parent.widget.cartItemModel.quantity--;
                       }else{
 //                        confirm
                         widget.parent.confirmRemove(context);
@@ -71,7 +70,7 @@ class _AddSubState extends State<AddSub> {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 1),
                   child: Text(
-                    count.toString(),
+                    widget.parent.widget.cartItemModel.quantity.toInt().toString(),
                     style: TextStyle(fontSize: MyApp.titleTextSize),
                   ),
                 ),
@@ -80,8 +79,8 @@ class _AddSubState extends State<AddSub> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    setState(() {
-                      count++;
+                    widget.parent.widget.parent.setState(() {
+                      widget.parent.widget.cartItemModel.quantity++;
                     });
                   },
                   child: Container(

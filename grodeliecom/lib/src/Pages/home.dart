@@ -51,7 +51,7 @@ class _Home_ScreenState extends State<Home_Screen> {
   Widget build(BuildContext context) {
     ScreenUtil.init(context);
 
-    MyApp.titleTextSize = 45.ssp;
+    MyApp.titleTextSize = 50.ssp;
     MyApp.subtitleTextSize = 35.ssp;
     MyApp.detailTextSize = 20.ssp;
     MyApp.subDetailTextSize = 15.ssp;

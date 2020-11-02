@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:grodeliecom/src/model/CartItem.dart';
+import 'package:grodeliecom/src/model/address.dart';
 import 'package:grodeliecom/src/model/product.dart';
 import 'package:grodeliecom/src/widget/cartWidget/cartItem.dart';
 import 'package:grodeliecom/src/widget/heading.dart';
@@ -17,9 +18,19 @@ class WishList extends StatefulWidget {
 
 class WishListState extends State<WishList> {
   List<String> data = ["Manage Cart", "Select Address", "Select Payment"];
-  List<String> address = ["Lalitpur", "Bhaktapur", "Kathmandu"];
   List<CartItemModel> carts = [];
+  List<Address> address = [];
+  int _currVal = 1;
+
+  double netTotal = 0;
   paymentMethod _character = paymentMethod.cashondelivery;
+
+  getTotalNet() {
+    netTotal = 0;
+    carts.forEach((element) {
+      netTotal += ((element.quantity * double.parse(element.product.price)));
+    });
+  }
 
   @override
   void initState() {
@@ -34,7 +45,7 @@ class WishListState extends State<WishList> {
       p.image =
       "https://image.shutterstock.com/image-photo/young-potato-isolated-on-white-260nw-630239534.jpg";
       p.price = "200";
-      carts.add(CartItemModel(quantity: 2.0, product: p));
+      carts.add(CartItemModel(quantity: 1, product: p));
     }
   }
 
@@ -43,6 +54,7 @@ class WishListState extends State<WishList> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     ScreenUtil.init(context);
+    getTotalNet();
     return Scaffold(
       appBar: getappbar("Cart"),
       body: Container(
@@ -175,13 +187,13 @@ class WishListState extends State<WishList> {
                           "Net Total",
                           style: TextStyle(
                               fontFamily: Constants.ROPEN_SANS,
-                              fontSize: MyApp.subtitleTextSize),
+                              fontSize: 45.ssp),
                         ),
                         Text(
-                          "Rs 250",
+                          "Rs $netTotal",
                           style: TextStyle(
                               fontFamily: Constants.ROPEN_SANS,
-                              fontSize: MyApp.subtitleTextSize),
+                              fontSize:  45.ssp),
                         )
                       ],
                     ),
@@ -195,13 +207,13 @@ class WishListState extends State<WishList> {
                           "Discount",
                           style: TextStyle(
                               fontFamily: Constants.SOPEN_SANS,
-                              fontSize: MyApp.subtitleTextSize),
+                              fontSize:  45.ssp),
                         ),
                         Text(
                           "Rs 50",
                           style: TextStyle(
                               fontFamily: Constants.SOPEN_SANS,
-                              fontSize: MyApp.subtitleTextSize),
+                              fontSize:  45.ssp),
                         )
                       ],
                     )
@@ -212,6 +224,7 @@ class WishListState extends State<WishList> {
                 height: MyApp.heightSpaceSize,
               ),
               Heading("DELIVERY ADDRESS", 1, false),
+              AddressRadio(),
               Container(
                 margin: EdgeInsets.all(10),
                 height: 100.ssp,
@@ -221,7 +234,11 @@ class WishListState extends State<WishList> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25.ssp),
                         side: BorderSide(color: MyApp.statusAwayColor)),
-                    onPressed: () {},
+                    onPressed: () {
+                      addAddress(context).whenComplete(() =>   setState(() {
+
+                      }));
+                    },
                     padding: EdgeInsets.all(20.ssp),
                     color: Colors.white,
                     textColor: MyApp.statusAwayColor,
@@ -234,7 +251,7 @@ class WishListState extends State<WishList> {
               ClipRRect(
                 borderRadius: BorderRadius.circular(5.0),
                 child: Container(
-                    height: 250.ssp,
+                    height: 400.ssp,
                     child: Card(
                       elevation: 3,
                       child: Column(
@@ -250,7 +267,7 @@ class WishListState extends State<WishList> {
               ),
               InkWell(
                 onTap: () {
-                  changeScreen(context,CompleteOrder());
+                  changeScreen(context, CompleteOrder());
                 },
                 child: Container(
                   margin: EdgeInsets.all(30.ssp),
@@ -295,7 +312,7 @@ class WishListState extends State<WishList> {
 
   Widget PaymentRadio(String title, paymentMethod method) {
     return Container(
-      height: 70.ssp,
+      height: 100.ssp,
       child: RadioListTile<paymentMethod>(
         title: Text(
           title,
@@ -317,6 +334,301 @@ class WishListState extends State<WishList> {
         },
       ),
     );
+  }
+
+  Widget AddressRadio() {
+    if (address.isEmpty && address.length == 0) {
+      return Container();
+    } else {
+      return Container(
+        height: 400.ssp,
+        decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
+        child:
+        ListView.builder(
+          shrinkWrap: true,
+          itemBuilder: (context, i) {
+            return Container(
+              height: 100.ssp,
+              margin: EdgeInsets.only(bottom: 10.ssp),
+              child: ListTile(
+                title: RadioListTile<String>(
+                  title: Text(
+                    "${address[i].district},${address[i].city}",
+                    style: TextStyle(
+                        fontFamily: Constants.SOPEN_SANS,
+                        color: Colors.black,
+                        fontSize: 40.ssp),
+                  ),
+                  activeColor: appcolor,
+                  value: i.toString(),
+                  groupValue: _currVal.toString(),
+                  onChanged: (val){
+                    setState(() {
+                      _currVal = i;
+                    });
+                  },
+                ),
+                trailing:
+                IconButton(
+                    icon: Icon(Icons.cancel),
+                    color: Colors.red,
+                    onPressed: () {
+                      setState(() {
+                        address.remove( address[i]);
+                      });
+                    }),
+              ),
+            );
+          },
+          itemCount: address.length,
+        ),
+      );
+    }
+  }
+
+  Future addAddress(BuildContext context) {
+    final formKey = GlobalKey<FormState>();
+    TextEditingController province = new TextEditingController();
+    TextEditingController district = new TextEditingController();
+    TextEditingController city = new TextEditingController();
+    TextEditingController street = new TextEditingController();
+    return showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (BuildContext context) {
+          return StatefulBuilder(
+            builder: (context, setStated) {
+              return Center(
+                child: Container(
+                  width: double.infinity,
+                  child: SingleChildScrollView(
+                    child: AlertDialog(
+                      actions: <Widget>[
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Container(
+                            width: 175.ssp,
+                            height: 75.ssp,
+                            decoration: BoxDecoration(
+//                  color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(color: appcolor)),
+                            child: Center(
+                                child: Text(
+                                  "Cancel",
+                                  style: TextStyle(
+                                      fontSize: 35.ssp,
+                                      fontFamily: Constants.ROPEN_SANS,
+                                      color: Color.fromRGBO(33, 33, 33, 1)),
+                                )),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 30.ssp,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            if (formKey.currentState.validate()) {
+                              Address a = new Address();
+                              a.street = street.text.toString();
+                              a.city = city.text.toString();
+                              a.province = province.text.toString();
+                              a.district = district.text.toString();
+                              address.add(a);
+                              Navigator.of(context).pop();
+                              return true;
+                            }
+                            print("validat=${formKey.currentState.validate()}");
+                          },
+                          child: Container(
+                            width: 175.ssp,
+                            height: 75.ssp,
+                            decoration: BoxDecoration(
+                              color: appcolor,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Center(
+                                child: Text(
+                                  "Save",
+                                  style: TextStyle(
+                                      fontSize: 35.ssp,
+                                      fontFamily: Constants.ROPEN_SANS,
+                                      color: Colors.white),
+                                )),
+                          ),
+                        ),
+                        SizedBox(
+                          height: MyApp.heightSpaceSize,
+                        ),
+                      ],
+                      content: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Padding(
+                              padding: EdgeInsets.all(15.ssp),
+                              child: Text(
+                                "Delivery Address",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: MyApp.titleTextSize,
+                                  letterSpacing: 0.5,
+                                  fontWeight: FontWeight.w900,
+                                  fontFamily: Constants.SPOPPINS,
+                                  //    fontWeight: FontWeight.bold
+                                ),
+                              ),
+                            ),
+                          ),
+                          Divider(
+                            height: 10.ssp,
+                            color: Colors.grey[400],
+                            thickness: 1,
+                          ),
+                          SizedBox(
+                            height: MyApp.heightSpaceSize,
+                          ),
+                          Form(
+                            key: formKey,
+                            child: Column(
+                              children: [
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(15.ssp),
+                                    child: Text(
+                                      "Province",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        letterSpacing: 0.2,
+                                        fontSize: MyApp.subtitleTextSize,
+                                        fontFamily: Constants.SPOPPINS,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(15.ssp),
+                                  child:
+                                  TextFormField(
+                                      controller: province,
+                                      validator: (input) {
+                                        return  input.isEmpty
+                                            ? "Province is Required"
+                                            : null;
+                                      },
+                                      decoration: kInputDecoration.copyWith(
+                                        hintText: "Select Province",
+                                      )),
+                                ),
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(15.ssp),
+                                    child: Text(
+                                      "District",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        letterSpacing: 0.2,
+                                        fontSize: MyApp.subtitleTextSize,
+                                        fontFamily: Constants.SPOPPINS,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(15.ssp),
+                                  child:
+                                  TextFormField(
+                                      controller: district,
+                                      validator: (input) {
+                                        return input.isEmpty
+                                            ? "District is Required"
+                                            : null;
+                                      },
+                                      decoration: kInputDecoration.copyWith(
+                                        hintText: "Select District",
+                                      )),
+                                ),
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(15.ssp),
+                                    child: Text(
+                                      "City",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        letterSpacing: 0.2,
+                                        fontSize: MyApp.subtitleTextSize,
+                                        fontFamily: Constants.SPOPPINS,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(15.ssp),
+                                  child: TextFormField(
+                                      controller: city,
+                                      validator: (input) {
+                                        return input.isEmpty
+                                            ? "City is Required"
+                                            : null;
+                                      },
+                                      decoration: kInputDecoration.copyWith(
+                                        hintText: "Select City",
+                                      )),
+                                ),
+                                Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Padding(
+                                    padding: EdgeInsets.all(15.ssp),
+                                    child: Text(
+                                      "Street",
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        letterSpacing: 0.2,
+                                        fontSize: MyApp.subtitleTextSize,
+                                        fontFamily: Constants.SPOPPINS,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  padding: EdgeInsets.all(15.ssp),
+                                  child:
+                                  TextFormField(
+                                      validator: (input) {
+                                        return  input.isEmpty
+                                            ? "Street is Required"
+                                            : null;
+                                      },
+                                      decoration: kInputDecoration.copyWith(
+                                        hintText: "Select Street",
+                                      )),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: MyApp.heightSpaceSize,
+                          ),
+                          Divider(
+                            height: 10.ssp,
+                            color: Colors.grey[400],
+                            thickness: 1,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        });
   }
 }
 

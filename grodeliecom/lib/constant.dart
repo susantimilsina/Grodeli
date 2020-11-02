@@ -18,3 +18,31 @@ AppBar getappbar(String title){
         fontFamily: Constants.RPOPPINS)),
   );
 }
+
+InputDecoration kInputDecoration= new InputDecoration(
+  labelStyle: TextStyle(
+      fontSize: MyApp.subtitleTextSize,
+      fontFamily: Constants.ROPEN_SANS,
+      color: Color.fromRGBO(0,0,0,0.6)),
+  fillColor: Colors.white,
+  contentPadding: EdgeInsets.all(12),
+  hintStyle: TextStyle(
+      fontSize: MyApp.subtitleTextSize,
+      fontFamily: Constants.ROPEN_SANS,
+      color: Color.fromRGBO(0, 0, 0, 0.6)),
+  border: new OutlineInputBorder(
+    borderRadius: new BorderRadius.circular(5.0),
+    borderSide: new BorderSide(
+        color: Color.fromRGBO(0, 0, 0, 0.12)),
+  ),
+  focusedBorder: OutlineInputBorder(
+    borderRadius: new BorderRadius.circular(5.0),
+    borderSide: new BorderSide(
+        color: Color.fromRGBO(0, 0, 0, 0.12)),
+  ),
+  enabledBorder: OutlineInputBorder(
+    borderRadius: new BorderRadius.circular(5.0),
+    borderSide: new BorderSide(
+        color: Color.fromRGBO(0, 0, 0, 0.12)),
+  ),
+);
